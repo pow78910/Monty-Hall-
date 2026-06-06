@@ -1,0 +1,15 @@
+/home/jamie/Documents/coding/montyHall/bin/Debug/net10.0/montyHall
+/home/jamie/Documents/coding/montyHall/bin/Debug/net10.0/montyHall.deps.json
+/home/jamie/Documents/coding/montyHall/bin/Debug/net10.0/montyHall.runtimeconfig.json
+/home/jamie/Documents/coding/montyHall/bin/Debug/net10.0/montyHall.dll
+/home/jamie/Documents/coding/montyHall/bin/Debug/net10.0/montyHall.pdb
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.GeneratedMSBuildEditorConfig.editorconfig
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.AssemblyInfoInputs.cache
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.AssemblyInfo.cs
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.csproj.CoreCompileInputs.cache
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.sourcelink.json
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.dll
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/refint/montyHall.dll
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.pdb
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/montyHall.genruntimeconfig.cache
+/home/jamie/Documents/coding/montyHall/obj/Debug/net10.0/ref/montyHall.dll
