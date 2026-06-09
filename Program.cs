@@ -250,7 +250,29 @@ namespace MontyHall
             {
                 if (x != winningDoor && x != firstDecision)
                 {
-                firstRevealUpd[x] = x;
+                    if (winningDoor != firstDecision)
+                    {
+                    firstRevealUpd[x] = x;
+                    }
+                    else if (winningDoor == firstDecision)
+                    {
+                        firstRevealUpd[x] = x;
+
+                        Random rand = new Random();
+                        int random = rand.Next(numOfDoors);
+                        while (random == winningDoor)
+                        {
+                            random = rand.Next(numOfDoors);
+                        }
+                        firstRevealUpd[random] = x;
+                        x = numOfDoors;
+
+                    }
+                
+          
+              
+                    
+
                 }
                 
                 
@@ -291,6 +313,7 @@ namespace MontyHall
                 {
                     doors[firstRevealUpd[x]] = $"Door {x + 1} - Goat";
                 }
+               // else if (firstRevealUpd[x] <= num)
                 else
                 {
                     doors[x] = $"Door {x + 1}";
