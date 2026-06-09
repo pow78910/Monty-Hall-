@@ -13,6 +13,7 @@ namespace MontyHall
         public static int swapWinScore;
         public static int keepWinScore;
        public static double score = 0;
+       public static int revealInstance = 0;
        
 
         static void Main(string[] args)
@@ -108,8 +109,8 @@ namespace MontyHall
                 {
                     NoSwap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
                 }
-
-            Classes.output(doors, numOfDoors);
+             revealInstance = 1;
+            Classes.output(doors, numOfDoors, revealInstance, firstDecision);
             
             score = WinOrLose(winning, score);
 
@@ -121,6 +122,7 @@ namespace MontyHall
             
             Console.WriteLine("(1) Play again");
             Console.WriteLine("(x) Back to menu");
+           
             char input = Classes.menuInput();
 
             switch (input)
@@ -149,7 +151,7 @@ namespace MontyHall
                 doors[x] = $"Door {x + 1}";
             }
 
-                Classes.output(doors, numOfDoors);
+                Classes.output(doors, numOfDoors, revealInstance, null);
                 Console.WriteLine("\n\n\nPick a door");
             /*
                 for (int x = 0; x < numOfDoors; x++)
@@ -285,7 +287,7 @@ namespace MontyHall
                 Console.WriteLine($"New reveal values: {reveal}");
             }
             Console.WriteLine("TEST CODE");
-            Console.WriteLine($"The winning door is {winningDoor}\nYou chose door {firstDecision}");
+            Console.WriteLine($"The winning door is {winningDoor + 1}\nYou chose door {firstDecision + 1}");
 
             Console.ReadKey();
             
@@ -294,19 +296,7 @@ namespace MontyHall
         
         public static void FirstRevealOutput(string[] doors, int winningDoor, int firstDecision, int firstReveal, int[] firstRevealUpd, int numOfDoors )
         {
-           // doors[firstReveal] = $"Door {firstReveal + 1} - Goat - Revealed Door";
-        /*
-            for (int x = 0; x < numOfDoors; x++)
-            {
-                doors[firstRevealUpd[x]]  = "Goat";
-            }
-*/
-           /* foreach (int reveal in firstRevealUpd)
-            {
-                doors[reveal] = "Goat";
-                 
-            }
-            */
+
             for (int x = 0; x < numOfDoors; x++)
             {
                 if (firstRevealUpd[x] <= numOfDoors)
@@ -318,10 +308,11 @@ namespace MontyHall
                 {
                     doors[x] = $"Door {x + 1}";
                 }
+                
             }
            // doors[winningDoor] = $"Door "
-
-            Classes.output(doors, numOfDoors);
+             revealInstance = 0;
+            Classes.output(doors, numOfDoors, revealInstance, firstDecision);
         }
         
         public static bool SwapOrKeep()
