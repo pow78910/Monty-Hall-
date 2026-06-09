@@ -238,7 +238,7 @@ namespace MontyHall
             foreach (int reveal in firstRevealUpd)
             {
             
-            Console.WriteLine(reveal);
+            Console.WriteLine($"Reveal Values: {reveal}");
             }
         
 
@@ -260,10 +260,10 @@ namespace MontyHall
              Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
             foreach (int reveal in firstRevealUpd)
             {
-            Console.WriteLine(reveal);
+                Console.WriteLine($"New reveal values: {reveal}");
             }
             Console.WriteLine("TEST CODE");
-            Console.WriteLine(winningDoor + "\n" + firstDecision);
+            Console.WriteLine($"The winning door is {winningDoor}\nYou chose door {firstDecision}");
 
             Console.ReadKey();
             
