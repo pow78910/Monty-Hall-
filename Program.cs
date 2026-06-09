@@ -9,18 +9,13 @@ namespace MontyHall
 {
     class Program
     {
-        int swapWinScore;
-        int keepWinScore;
-       public static int score = 0;
+        public static int swapWinScore;
+        public static int keepWinScore;
+       public static double score = 0;
+       
 
         static void Main(string[] args)
         {
-            Start();
-        }
-
-        static void Start()
-        {
-            
             Console.Clear();
             Console.WriteLine("Weclome to the Monty Hall problem");
             Console.WriteLine("Behind one of these doors is a ferrari, in the other two, goats.");
@@ -28,16 +23,56 @@ namespace MontyHall
             Console.WriteLine("You will then have to option to switch door, or stick with the one you have\n\n");
             Console.WriteLine("\nAre you ready (press any key to continue)");
             Console.ReadKey();
-            
+            Menu();
+        }
 
+        static void Menu()
+        {
+            Console.Clear();
+            bool auto = false;
+            Console.WriteLine("Choose which version you want to play\n\n");
+            Console.WriteLine("1) Standard game(3 Doors)");
+            Console.WriteLine("2) Increased doors (100 Doors)");
+            Console.WriteLine("3) Custom number of doors");
+            char input = Classes.menuInput();
+
+            while (true)
+            {
+                if (input == '1')
+                {
+                    Start(3, auto);
+                }
+                else if(input == '2')
+                {
+                    Start(100, auto);
+                }
+                else if (input == '3')
+                {
+                    
+                }
+                else if (input == 'a' || input =='A')
+                {
+                    auto = true;
+
+                }
+            
+            }
+        }
+
+        static void Start(int numOfDoors, bool auto)
+        {
+             int roundCount = 0;
             for (int x = 0; x < 100;x++)
             {
-                Console.Clear();       
-                string[] doors = DoorsInit(3);
+                roundCount++;
+                Console.Clear();     
 
-                int winningDoor = WinningDoorInit(3);
+                Console.WriteLine($"\nPick a door(1-{numOfDoors})");  
+                string[] doors = DoorsInit(numOfDoors);
 
-                Console.WriteLine("\nChoose a door(1,2,3)\n");
+                int winningDoor = WinningDoorInit(numOfDoors);
+
+                
                 
                 int firstDecision = FirstDecision();
                 doors[firstDecision] = $"Door {firstDecision + 1} - Chosen Door";
@@ -49,12 +84,13 @@ namespace MontyHall
             //Console.WriteLine($"\nWinning Door {winningDoor + 1}\nYour Decision {firstDecision + 1}\ndoor to be revealed {firstReveal + 1}");
             
             bool winning = Winning(winningDoor, firstDecision);
-            Console.WriteLine($"Bool winning = {winning}");
+           //TEST CODE 
+           // Console.WriteLine($"Bool winning = {winning}");
             
             //TEST CODE
             //Console.WriteLine($"\nTEST WINNING BOOL = {winning}");
 
-            Console.WriteLine("You can now choose to switch or keep you door(s/k)");
+            Console.WriteLine("\nYou can now choose to keep(1) your door or swap(2) with the remaining door");
             
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// 
@@ -70,11 +106,16 @@ namespace MontyHall
 
             Classes.output(doors, 4);
             
-            Console.WriteLine(winning);
             score = WinOrLose(winning, score);
-            
 
-            Console.WriteLine("Press any key to play again");
+            (swapWinScore, keepWinScore) = SwapKeepScores(swapWinScore, keepWinScore, swapDecision, winning);
+            double swapWinPercentage = (swapWinScore * 100) / roundCount;
+            double keepWinPercentage = (keepWinScore * 100) / roundCount;
+           
+            Console.WriteLine($"Swapping Wins: {swapWinScore}({swapWinPercentage}%)\tKeeping Wins: {keepWinScore}({keepWinPercentage}%");
+            
+ 
+            Console.WriteLine("\nPress any key to play again");
             Console.ReadKey();
         }
           //SwapKeepWinScore();
@@ -82,7 +123,7 @@ namespace MontyHall
 
 
         }
-           
+       
         public static string[] DoorsInit(int numOfDoors)
             {
                 string[] doors = ["Door 1", "Door 2", "Door 3"];
@@ -128,7 +169,8 @@ namespace MontyHall
 
         public static bool Winning(int winningDoor, int firstDecision)
         {
-            Console.WriteLine($"winning door = {winningDoor}, first decision = {firstDecision}");
+            //TESTCODE
+           // Console.WriteLine($"winning door = {winningDoor}, first decision = {firstDecision}");
             bool winning = false;
 
             if (winningDoor == firstDecision)
@@ -170,20 +212,26 @@ namespace MontyHall
 
             while (true)
             {
-                char input = Classes.menuInput();
-                if (input == 's'|| input == 'S')
+                ConsoleKeyInfo input = Console.ReadKey(true);
+                if (char.IsDigit(input.KeyChar))
                 {
-                    swapDecision = true;
-                    Console.WriteLine("\nYou chose to swap doors");
-                    return swapDecision;
+                    int swapInput = int.Parse(input.KeyChar.ToString());
+               
+                    if (swapInput == 1)
+                    {
+                        swapDecision = false;
+                        return swapDecision;
+                    }
+                    else if (swapInput == 2)
+                    {
+                        swapDecision = true;
+                        return swapDecision;
+                    }
                 }
-                else if (input == 'k' || input == 'K')
-                {
-                    swapDecision = false;
-                    Console.WriteLine("\nYou chose to keep your current door");
-                    return swapDecision;
-                }
+                else{
+    
                 Console.WriteLine("Invalid Input, try again");
+                }
             }
             
             
@@ -192,13 +240,14 @@ namespace MontyHall
 
         public static (string[] doors, bool winning) Swap (string[] doors, int winningDoor, int firstDecision, int firstReveal, bool winning)
         {
-
-            Console.WriteLine($"\nBool winning before swap = {winning}");
-            Console.ReadKey();
+            //TEST CODE 
+            //Console.WriteLine($"\nBool winning before swap = {winning}");
+            
             if (winning == false)
             {
                 winning = true;
-                  Console.WriteLine($"\nBool winning after swap = {winning}");
+                  //TEST CODE
+                  //Console.WriteLine($"\nBool winning after swap = {winning}");
                 int tmpDoor = winningDoor;
                 int secondDecision = tmpDoor;
                 winningDoor = firstDecision;
@@ -212,7 +261,8 @@ namespace MontyHall
             {
                 
                 winning = false;
-                 Console.WriteLine($"\nBool winning after swap = {winning}");
+                //TEST CODE 
+                // Console.WriteLine($"\nBool winning after swap = {winning}");
                 while(firstDecision == winningDoor && firstDecision == firstReveal)
                 {
                     Random random = new Random();
@@ -247,23 +297,49 @@ namespace MontyHall
 
         
         
-        public static int WinOrLose(bool winning, int score)
+        public static double WinOrLose(bool winning, double score)
         {
-
-            Console.WriteLine($"\nBool winning = {winning}\n");
+            //TEST CODE 
+            //Console.WriteLine($"\nBool winning = {winning}\n");
             if (winning == true)
             {
                 score++;
-            Console.WriteLine($"You chose the correct door , you win the ferrari");
+            Console.WriteLine($"\nYou win!!!");
                 Console.WriteLine($"Score: {score}");
             }
             else if (winning == false)
             {
-                Console.WriteLine("You lost, unlucky");
-                Console.WriteLine($"Score: {score}");
+                Console.WriteLine("\nYou Lose!!!");
+                Console.WriteLine($"\nScore: {score}");
             }
             return score;
         }
+
+        public static ( int swapWinScore, int keepWinScore)SwapKeepScores(int swapWinScore, int keepWinScore, bool swapDecision, bool winning)
+        {
+
+          if (winning == true && swapDecision == true)
+            {
+                swapWinScore++;
+            }
+            else if (winning == false && swapDecision == false)
+            {
+                swapWinScore++;
+            }
+            else if (winning == false && swapDecision == true)
+            {
+                keepWinScore++;
+            }
+            else if (winning == true && swapDecision == false)
+            {
+                keepWinScore++;
+            }
+            //TEST CODE
+            //Console.WriteLine($"\n\n\nWinning {winning}\n SwapDecision: {swapDecision}");
+
+            return (swapWinScore, keepWinScore);
+        }
     }
+
 }
     

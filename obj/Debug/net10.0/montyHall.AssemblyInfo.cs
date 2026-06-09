@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("montyHall")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ac7f5afec9d3c82ad24a31a421fcde2db69e679")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e84e75a55cf394445bbb9797de2690a0f611a4ba")]
 [assembly: System.Reflection.AssemblyProductAttribute("montyHall")]
 [assembly: System.Reflection.AssemblyTitleAttribute("montyHall")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
