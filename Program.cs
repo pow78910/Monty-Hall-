@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using System.Xml;
@@ -61,7 +62,9 @@ namespace MontyHall
 
         static void Start(int numOfDoors, bool auto)
         {
-             int roundCount = 0;
+            int roundCount = 0;
+            swapWinScore = 0;
+            keepWinScore = 0;
             for (int x = 0; x < 100;x++)
             {
                 roundCount++;
@@ -76,9 +79,11 @@ namespace MontyHall
                 
                 int firstDecision = FirstDecision(numOfDoors);
                 doors[firstDecision] = $"Door {firstDecision + 1} - Chosen Door";
-                int firstReveal = FirstRevealInit(winningDoor, firstDecision, 3);
-                
-                FirstRevealOutput(doors, winningDoor, firstDecision, firstReveal, 3);
+                int firstReveal = FirstRevealInit(winningDoor, firstDecision, numOfDoors);
+                //test - maybe delete later 
+                int[] firstRevealUpd = FirstRevealUpd(winningDoor,  firstDecision,  numOfDoors);
+
+                FirstRevealOutput(doors, winningDoor, firstDecision, firstReveal, firstRevealUpd, numOfDoors);
                 
                 //TEST CODE    
             //Console.WriteLine($"\nWinning Door {winningDoor + 1}\nYour Decision {firstDecision + 1}\ndoor to be revealed {firstReveal + 1}");
@@ -90,7 +95,7 @@ namespace MontyHall
             //TEST CODE
             //Console.WriteLine($"\nTEST WINNING BOOL = {winning}");
 
-            Console.WriteLine("\nYou can now choose to keep(1) your door or swap(2) with the remaining door");
+            Console.WriteLine("\n\n\nYou can now choose to keep(1) your door or swap(2) with the remaining door");
             
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// 
@@ -112,9 +117,9 @@ namespace MontyHall
             double swapWinPercentage = (swapWinScore * 100) / roundCount;
             double keepWinPercentage = (keepWinScore * 100) / roundCount;
            
-            Console.WriteLine($"Swapping Wins: {swapWinScore}({swapWinPercentage}%)\tKeeping Wins: {keepWinScore}({keepWinPercentage}%");
+            Console.WriteLine($"\n\nSwapping Wins: {swapWinScore} ({swapWinPercentage}%)\tKeeping Wins: {keepWinScore} ({keepWinPercentage}%)\n\n");
             
-            Console.WriteLine("(1)Play again");
+            Console.WriteLine("(1) Play again");
             Console.WriteLine("(x) Back to menu");
             char input = Classes.menuInput();
 
@@ -145,12 +150,13 @@ namespace MontyHall
             }
 
                 Classes.output(doors, numOfDoors);
-                
+                Console.WriteLine("\n\n\nPick a door");
             /*
                 for (int x = 0; x < numOfDoors; x++)
                 {
                     doors[x] = "Goat";
                 }*/
+                
                 return doors;
                 
                 
@@ -211,7 +217,8 @@ namespace MontyHall
         public static int FirstRevealInit(int winningDoor, int firstDecision, int numOfDoors)
         {
             int firstReveal = 0;
-        
+
+            
                 while(firstReveal == firstDecision || firstReveal == winningDoor)
                 {
                 Random random = new Random();
@@ -221,10 +228,75 @@ namespace MontyHall
             return firstReveal;
         
         }
-        
-        public static void FirstRevealOutput(string[] doors, int winningDoor, int firstDecision, int firstReveal, int numOfDoors )
+    public static int [] FirstRevealUpd(int winningDoor, int firstDecision, int numOfDoors)
         {
-            doors[firstReveal] = $"Door {firstReveal + 1} - Goat - Revealed Door";
+            int[] firstRevealUpd = new int[numOfDoors];
+            
+            Console.WriteLine("\n\n\nTEST CODE\n\n\n");
+
+            
+            foreach (int reveal in firstRevealUpd)
+            {
+            
+            Console.WriteLine(reveal);
+            }
+        
+
+            for (int x = 0; x < numOfDoors; x++)
+            {
+                firstRevealUpd[x] = numOfDoors + 1;
+            }
+            for (int x = 0; x < numOfDoors; x++)
+            {
+                if (x != winningDoor && x != firstDecision)
+                {
+                firstRevealUpd[x] = x;
+                }
+                
+                
+                
+            }
+
+             Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
+            foreach (int reveal in firstRevealUpd)
+            {
+            Console.WriteLine(reveal);
+            }
+            Console.WriteLine("TEST CODE");
+            Console.WriteLine(winningDoor + "\n" + firstDecision);
+
+            Console.ReadKey();
+            
+            return firstRevealUpd;
+        }
+        
+        public static void FirstRevealOutput(string[] doors, int winningDoor, int firstDecision, int firstReveal, int[] firstRevealUpd, int numOfDoors )
+        {
+           // doors[firstReveal] = $"Door {firstReveal + 1} - Goat - Revealed Door";
+        /*
+            for (int x = 0; x < numOfDoors; x++)
+            {
+                doors[firstRevealUpd[x]]  = "Goat";
+            }
+*/
+           /* foreach (int reveal in firstRevealUpd)
+            {
+                doors[reveal] = "Goat";
+                 
+            }
+            */
+            for (int x = 0; x < numOfDoors; x++)
+            {
+                if (firstRevealUpd[x] <= numOfDoors)
+                {
+                    doors[firstRevealUpd[x]] = $"Door {x + 1} - Goat";
+                }
+                else
+                {
+                    doors[x] = $"Door {x + 1}";
+                }
+            }
+           // doors[winningDoor] = $"Door "
 
             Classes.output(doors, numOfDoors);
         }
@@ -333,7 +405,7 @@ namespace MontyHall
             }
             else if (winning == false)
             {
-                Console.WriteLine("\nYou Lose!!!");
+                Console.WriteLine("\n\n\nYou Lose!!!");
                 Console.WriteLine($"\nScore: {score}");
             }
             return score;
