@@ -11,6 +11,7 @@ namespace MontyHall
     {
         int swapWinScore;
         int keepWinScore;
+       public static int score = 0;
 
         static void Main(string[] args)
         {
@@ -37,8 +38,9 @@ namespace MontyHall
                 int winningDoor = WinningDoorInit(3);
 
                 Console.WriteLine("\nChoose a door(1,2,3)\n");
+                
                 int firstDecision = FirstDecision();
-
+                doors[firstDecision] = $"Door {firstDecision + 1} - Chosen Door";
                 int firstReveal = FirstRevealInit(winningDoor, firstDecision, 3);
                 
                 FirstRevealOutput(doors, winningDoor, firstDecision, firstReveal, 3);
@@ -47,6 +49,7 @@ namespace MontyHall
             //Console.WriteLine($"\nWinning Door {winningDoor + 1}\nYour Decision {firstDecision + 1}\ndoor to be revealed {firstReveal + 1}");
             
             bool winning = Winning(winningDoor, firstDecision);
+            Console.WriteLine($"Bool winning = {winning}");
             
             //TEST CODE
             //Console.WriteLine($"\nTEST WINNING BOOL = {winning}");
@@ -58,12 +61,17 @@ namespace MontyHall
             bool swapDecision = SwapOrKeep();
             if (swapDecision == true)
             {
-                swap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
+                (doors, winning) = Swap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
             }
+            else if (swapDecision == false)
+                {
+                    NoSwap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
+                }
 
             Classes.output(doors, 4);
-            int score = 0;
-            WinOrLose(winning, score);
+            
+            Console.WriteLine(winning);
+            score = WinOrLose(winning, score);
             
 
             Console.WriteLine("Press any key to play again");
@@ -102,9 +110,17 @@ namespace MontyHall
 
         public static int FirstDecision()
         {
+            while(true)
+            {
                 ConsoleKeyInfo firstDecisionInput = Console.ReadKey(true);
-            // int firstDecision = Convert.ToInt32(firstDecisonInput.KeyChar);
+
+                if (firstDecisionInput.KeyChar == '1' || firstDecisionInput.KeyChar == '2' || firstDecisionInput.KeyChar == '3')
+                {
                 return int.Parse(firstDecisionInput.KeyChar.ToString()) - 1;
+                }
+                Console.WriteLine("Invalid Input - try again");
+
+            }
 
 
             
@@ -112,6 +128,7 @@ namespace MontyHall
 
         public static bool Winning(int winningDoor, int firstDecision)
         {
+            Console.WriteLine($"winning door = {winningDoor}, first decision = {firstDecision}");
             bool winning = false;
 
             if (winningDoor == firstDecision)
@@ -141,7 +158,7 @@ namespace MontyHall
         
         public static void FirstRevealOutput(string[] doors, int winningDoor, int firstDecision, int firstReveal, int numOfDoors )
         {
-            doors[firstReveal] = "Goat - OPENED DOOR";
+            doors[firstReveal] = $"Door {firstReveal + 1} - Goat - Revealed Door";
 
             Classes.output(doors, 3);
         }
@@ -149,67 +166,103 @@ namespace MontyHall
         public static bool SwapOrKeep()
         {
             bool swapDecision = false;
-            char input = Classes.menuInput();
+            
 
-            if (input == 's'|| input == 'S')
+            while (true)
             {
-                swapDecision = true;
-                Console.WriteLine("\nYou chose to swap doors");
+                char input = Classes.menuInput();
+                if (input == 's'|| input == 'S')
+                {
+                    swapDecision = true;
+                    Console.WriteLine("\nYou chose to swap doors");
+                    return swapDecision;
+                }
+                else if (input == 'k' || input == 'K')
+                {
+                    swapDecision = false;
+                    Console.WriteLine("\nYou chose to keep your current door");
+                    return swapDecision;
+                }
+                Console.WriteLine("Invalid Input, try again");
             }
-            else if (input == 'k' || input == 'K')
-            {
-                swapDecision = false;
-                Console.WriteLine("\nYou chose to keep your current door");
-            }
-
-
-            return swapDecision;
+            
+            
 
         }
 
-        public static bool swap (string[] doors, int winningDoor, int firstDecision, int firstReveal, bool winning)
+        public static (string[] doors, bool winning) Swap (string[] doors, int winningDoor, int firstDecision, int firstReveal, bool winning)
         {
-            if (winning != true)
+
+            Console.WriteLine($"\nBool winning before swap = {winning}");
+            Console.ReadKey();
+            if (winning == false)
             {
                 winning = true;
+                  Console.WriteLine($"\nBool winning after swap = {winning}");
                 int tmpDoor = winningDoor;
+                int secondDecision = tmpDoor;
                 winningDoor = firstDecision;
-                firstDecision = tmpDoor;
                 
-                doors[winningDoor] = "Ferrari";
+                doors[firstDecision] = $"Door {firstDecision + 1}";
+                doors[secondDecision] = $"Door {secondDecision + 1} - Ferrari";
+             
                 
             }
             else if (winning == true)
             {
+                
                 winning = false;
+                 Console.WriteLine($"\nBool winning after swap = {winning}");
                 while(firstDecision == winningDoor && firstDecision == firstReveal)
                 {
                     Random random = new Random();
-                    firstDecision = random.Next(3);
+                    int secondDecision = random.Next(3);
+                    doors[secondDecision] = $"Door {secondDecision + 1} Goat";
+                    
                 }
-                doors[firstDecision] = $"Door {firstDecision + 1}";
+                
+               
                 
             }
-            return winning;
+
+            return (doors, winning);
+      
+        }
+
+        public static string[] NoSwap(string[] doors, int winningDoor, int firstDecision, int firstReveal, bool winning)
+        {
+            if (winning == true)
+            {
+            doors[winningDoor] = $"Door {winningDoor + 1} - Ferrari";
+            }
+            else if (winning == false)
+            {
+                doors[firstDecision] = $"Door {firstDecision + 1} - Goat";
+            }
+            
+
+            return doors;
         }
 
 
         
         
-        public static void WinOrLose(bool winning, int score)
+        public static int WinOrLose(bool winning, int score)
         {
 
             Console.WriteLine($"\nBool winning = {winning}\n");
             if (winning == true)
             {
                 score++;
-                Console.WriteLine("You got the correct door, you win the ferrari");
-                Console.WriteLine($"Your score is {score}");
+            Console.WriteLine($"You chose the correct door , you win the ferrari");
+                Console.WriteLine($"Score: {score}");
             }
             else if (winning == false)
             {
                 Console.WriteLine("You lost, unlucky");
+                Console.WriteLine($"Score: {score}");
             }
+            return score;
         }
     }
 }
