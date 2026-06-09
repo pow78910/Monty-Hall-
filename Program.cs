@@ -74,7 +74,7 @@ namespace MontyHall
 
                 
                 
-                int firstDecision = FirstDecision();
+                int firstDecision = FirstDecision(numOfDoors);
                 doors[firstDecision] = $"Door {firstDecision + 1} - Chosen Door";
                 int firstReveal = FirstRevealInit(winningDoor, firstDecision, 3);
                 
@@ -104,7 +104,7 @@ namespace MontyHall
                     NoSwap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
                 }
 
-            Classes.output(doors, 4);
+            Classes.output(doors, numOfDoors);
             
             score = WinOrLose(winning, score);
 
@@ -114,9 +114,20 @@ namespace MontyHall
            
             Console.WriteLine($"Swapping Wins: {swapWinScore}({swapWinPercentage}%)\tKeeping Wins: {keepWinScore}({keepWinPercentage}%");
             
- 
-            Console.WriteLine("\nPress any key to play again");
-            Console.ReadKey();
+            Console.WriteLine("(1)Play again");
+            Console.WriteLine("(x) Back to menu");
+            char input = Classes.menuInput();
+
+            switch (input)
+                {
+                    case 'x':
+                        Menu();
+                        break;
+                    default:
+                        break;
+                }
+
+            
         }
           //SwapKeepWinScore();
 
@@ -126,10 +137,14 @@ namespace MontyHall
        
         public static string[] DoorsInit(int numOfDoors)
             {
-                string[] doors = ["Door 1", "Door 2", "Door 3"];
+                string[] doors = new string[numOfDoors];
 
+                for (int x = 0; x < numOfDoors; x++)
+            {
+                doors[x] = $"Door {x + 1}";
+            }
 
-                Classes.output(doors, 1);
+                Classes.output(doors, numOfDoors);
                 
             /*
                 for (int x = 0; x < numOfDoors; x++)
@@ -149,16 +164,25 @@ namespace MontyHall
 
             }
 
-        public static int FirstDecision()
+        public static int FirstDecision(int numOfDoors)
         {
             while(true)
             {
-                ConsoleKeyInfo firstDecisionInput = Console.ReadKey(true);
-
-                if (firstDecisionInput.KeyChar == '1' || firstDecisionInput.KeyChar == '2' || firstDecisionInput.KeyChar == '3')
+                if (numOfDoors < 10)
                 {
-                return int.Parse(firstDecisionInput.KeyChar.ToString()) - 1;
+                    ConsoleKeyInfo firstDecisionInput = Console.ReadKey(true);
+                   
+                    return int.Parse(firstDecisionInput.KeyChar.ToString()) - 1;
                 }
+                    
+                else if (numOfDoors >= 10)
+                    {
+                        string firstDecisionInputStr = "ERROR";
+                        firstDecisionInputStr = Console.ReadLine();
+                        return int.Parse(firstDecisionInputStr) - 1;
+                    }
+
+                
                 Console.WriteLine("Invalid Input - try again");
 
             }
@@ -202,7 +226,7 @@ namespace MontyHall
         {
             doors[firstReveal] = $"Door {firstReveal + 1} - Goat - Revealed Door";
 
-            Classes.output(doors, 3);
+            Classes.output(doors, numOfDoors);
         }
         
         public static bool SwapOrKeep()
