@@ -352,7 +352,7 @@ namespace MontyHall
             {
                 Console.WriteLine(reveal);
             }
-            Console.ReadKey();
+           // Console.ReadKey();
 
             for (int x = 0; x < numOfDoors; x++)
             {
@@ -361,23 +361,23 @@ namespace MontyHall
                     firstRevealUpd[x] = x;
                     if (winningDoor != firstDecision)
                     {
-                    firstRevealUpd[x] = x;
+                        firstRevealUpd[x] = x;
                     }
-                    else if (winningDoor == firstDecision)
-                    {   
-                        Console.WriteLine("This code is reachable");
-                        firstRevealUpd[x] = numOfDoors + 1;
+                else if (winningDoor == firstDecision)
+                {   
+                    Console.WriteLine("This code is reachable");
+                    firstRevealUpd[x] = numOfDoors + 1;
 
-                        Random rand = new Random();
-                        int random = rand.Next(numOfDoors);
-                        while (random == winningDoor)
-                        {
-                            random = rand.Next(numOfDoors);
-                        }
-                        firstRevealUpd[random] = x;
-                        x = numOfDoors;
-
+                    Random rand = new Random();
+                    int random = rand.Next(numOfDoors);
+                    while (random == winningDoor)
+                    {
+                        random = rand.Next(numOfDoors);
                     }
+                    firstRevealUpd[random] = x;
+                    x = numOfDoors;
+
+                }
             }
                 
           
@@ -398,7 +398,7 @@ namespace MontyHall
             Console.WriteLine("TEST CODE");
             Console.WriteLine($"The winning door is {winningDoor}\nYou chose door {firstDecision}");
 
-            Console.ReadKey();
+          //  Console.ReadKey();
 
             return firstRevealUpd;
         }
@@ -466,9 +466,10 @@ namespace MontyHall
                 winning = true;
                   //TEST CODE
                   //Console.WriteLine($"\nBool winning after swap = {winning}");
-                int tmpDoor = winningDoor;
-                int secondDecision = tmpDoor;
-                winningDoor = firstDecision;
+               // int tmpDoor = winningDoor;
+                int secondDecision = winningDoor;
+                //Look at this
+               // winningDoor = firstDecision;
                 
                 doors[firstDecision] = $"Door {firstDecision + 1}";
                 doors [firstReveal] = $"Door {firstReveal + 1} - Goat";
@@ -483,7 +484,7 @@ namespace MontyHall
                 //TEST CODE 
                 // Console.WriteLine($"\nBool winning after swap = {winning}");
                 Random random = new Random();
-                int secondDecision = firstDecision;
+                int secondDecision = random.Next(3);
                 while(secondDecision == winningDoor || secondDecision == firstReveal)
                 {
                     
@@ -491,7 +492,7 @@ namespace MontyHall
 
                     
                 }
-                    doors[firstDecision] = $"Door {firstDecision + 1}";
+                   // doors[firstDecision] = $"Door {firstDecision + 1}";
                     doors[secondDecision] = $"Door {secondDecision + 1} - Goat";
                     doors [firstReveal] = $"Door {firstReveal + 1} - Goat";
                 
