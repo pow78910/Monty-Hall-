@@ -64,9 +64,53 @@ public class Classes()
     }
 
 
-public static char menuInput ()
+    public static char menuInput ()
     {
          ConsoleKeyInfo input = Console.ReadKey(true);
          return input.KeyChar;
     }
-}
+
+
+    public static int CustomDoorNum()
+    {
+        Console.Clear();
+        Console.WriteLine("Enter the number of doors you would like to play with");
+        
+
+        while (true)
+            {
+                string? input = Console.ReadLine();
+                
+                    if (int.TryParse(input, out int customDoors))
+                {
+                    return customDoors;
+                }    
+                Console.WriteLine("Invalid input, try again");
+            }  
+        
+        }
+
+    public static int RoundNum(int roundNum)
+    {
+        
+        Console.WriteLine("\n\n\nHow many rounds would you like to play?");
+        while (true)
+        {
+                string? input = Console.ReadLine();
+                
+                if (int.TryParse(input, out roundNum))
+                {
+                return roundNum;
+                }  
+
+            Console.WriteLine("Invalid input, try again");
+        }  
+        
+    }
+    
+    
+    
+    }
+
+
+

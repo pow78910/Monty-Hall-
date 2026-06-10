@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Channels;
 using System.Xml;
 
@@ -14,6 +15,11 @@ namespace MontyHall
         public static int keepWinScore;
        public static double score = 0;
        public static int revealInstance = 0;
+
+       public static bool auto = false; 
+
+       public static int roundNum = 100;
+       
        
 
         static void Main(string[] args)
@@ -31,54 +37,90 @@ namespace MontyHall
         static void Menu()
         {
             Console.Clear();
-            bool auto = false;
+            
             Console.WriteLine("Choose which version you want to play\n\n");
             Console.WriteLine("1) Standard game(3 Doors)");
             Console.WriteLine("2) Increased doors (100 Doors)");
             Console.WriteLine("3) Custom number of doors");
+            Console.WriteLine("\n\na) Turn auto on/off");
+            Console.WriteLine($"r) Choose amount of rounds to play - {roundNum}");
+            Console.WriteLine($"\n\n Auto = {auto}");
+
             char input = Classes.menuInput();
 
             while (true)
             {
                 if (input == '1')
                 {
-                    Start(3, auto);
+                    Start(3, auto, roundNum);
                 }
                 else if(input == '2')
                 {
-                    Start(100, auto);
+                    Start(100, auto, roundNum);
                 }
                 else if (input == '3')
                 {
-                    
+                   int customDoors = Classes.CustomDoorNum();
+        
+                   Start(customDoors, auto, roundNum);
                 }
                 else if (input == 'a' || input =='A')
                 {
+                    if (auto == false)
+                    {
                     auto = true;
+                    }
+                    else if (auto == true)
+                    {
+                        auto = false;
+                    }
+                    Menu();
 
+                }
+                else if (input == 'r' || input == 'R')
+                {
+                    roundNum = Classes.RoundNum(roundNum);
+                    Menu();
                 }
             
             }
         }
 
-        static void Start(int numOfDoors, bool auto)
+        static void Start(int numOfDoors, bool auto, int roundNum)
         {
+
+            
             int roundCount = 0;
             swapWinScore = 0;
             keepWinScore = 0;
-            for (int x = 0; x < 100;x++)
+            score = 0;
+
+            for (int x = 0; x < roundNum; x++)
             {
                 roundCount++;
                 Console.Clear();     
 
-                Console.WriteLine($"\nPick a door(1-{numOfDoors})");  
+               
                 string[] doors = DoorsInit(numOfDoors);
 
                 int winningDoor = WinningDoorInit(numOfDoors);
 
+                int firstDecision;
+                switch(auto)
+                {
+                    case false:
+                    
+                     firstDecision = FirstDecision(numOfDoors);
+                        break;
+                    case true:
+                        firstDecision = FirstDecisionAuto(numOfDoors);
+                        break;
+                    
+
+                }
                 
-                
-                int firstDecision = FirstDecision(numOfDoors);
+
+
                 doors[firstDecision] = $"Door {firstDecision + 1} - Chosen Door";
                 int firstReveal = FirstRevealInit(winningDoor, firstDecision, numOfDoors);
                 //test - maybe delete later 
@@ -87,58 +129,98 @@ namespace MontyHall
                 FirstRevealOutput(doors, winningDoor, firstDecision, firstReveal, firstRevealUpd, numOfDoors);
                 
                 //TEST CODE    
-            //Console.WriteLine($"\nWinning Door {winningDoor + 1}\nYour Decision {firstDecision + 1}\ndoor to be revealed {firstReveal + 1}");
-            
-            bool winning = Winning(winningDoor, firstDecision);
-           //TEST CODE 
-           // Console.WriteLine($"Bool winning = {winning}");
-            
-            //TEST CODE
-            //Console.WriteLine($"\nTEST WINNING BOOL = {winning}");
+                //Console.WriteLine($"\nWinning Door {winningDoor + 1}\nYour Decision {firstDecision + 1}\ndoor to be revealed {firstReveal + 1}");
+                
+                bool winning = Winning(winningDoor, firstDecision);
+                //TEST CODE 
+                
+                
+                //TEST CODE
+                //Console.WriteLine($"\nTEST WINNING BOOL = {winning}");
 
-            Console.WriteLine("\n\n\nYou can now choose to keep(1) your door or swap(2) with the remaining door");
-            
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// 
-            bool swapDecision = SwapOrKeep();
-            if (swapDecision == true)
-            {
-                (doors, winning) = Swap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
-            }
-            else if (swapDecision == false)
-                {
-                    NoSwap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
-                }
+                Console.WriteLine("\n\n\nYou can now choose to keep(1) your door or swap(2) with the remaining door");
+                
+    
+    
+                bool swapDecision;
 
-            revealInstance = 1;
-            Classes.output(doors, numOfDoors, revealInstance, firstDecision);
-            
-            score = WinOrLose(winning, score);
+                switch(auto)
+                    {
+                        case false:
+                            swapDecision = SwapOrKeep();
+                            break;
 
-            (swapWinScore, keepWinScore) = SwapKeepScores(swapWinScore, keepWinScore, swapDecision, winning);
-            double swapWinPercentage = (swapWinScore * 100) / roundCount;
-            double keepWinPercentage = (keepWinScore * 100) / roundCount;
+                        case true:
+
+                            swapDecision = true;
+                            break;
+                    
+
+                    }
            
-            Console.WriteLine($"\n\nSwapping Wins: {swapWinScore} ({swapWinPercentage}%)\tKeeping Wins: {keepWinScore} ({keepWinPercentage}%)\n\n");
-            
-            Console.WriteLine("(1) Play again");
-            Console.WriteLine("(x) Back to menu");
-            char input = Classes.menuInput();
-
-            switch (input)
+                if (swapDecision == true)
                 {
-                    case 'x':
-                        Menu();
+                    (doors, winning) = Swap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
+                }
+                else if (swapDecision == false)
+                    {
+                        NoSwap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
+                    }
+
+                revealInstance = 1;
+                Classes.output(doors, numOfDoors, revealInstance, firstDecision);
+                
+                switch(auto)
+                {
+                    case false:
+                        score = WinOrLose(winning, score);
+                    break;
+                    case true:
                         break;
-                    default:
+                }
+
+                (swapWinScore, keepWinScore) = SwapKeepScores(swapWinScore, keepWinScore, swapDecision, winning);
+                double swapWinPercentage = (swapWinScore * 100) / roundCount;
+                double keepWinPercentage = (keepWinScore * 100) / roundCount;
+            
+                Console.WriteLine($"\n\nSwapping Wins: {swapWinScore} ({swapWinPercentage}%)\tKeeping Wins: {keepWinScore} ({keepWinPercentage}%)\n\n");
+                
+               
+                
+            
+                    
+                switch (auto)
+                {
+                    case false:
+                        Console.WriteLine("(1) Play again");
+                        Console.WriteLine("(x) Back to menu");
+                        char input = Classes.menuInput();
+                        switch (input)
+                        {
+                            case 'x':
+                                Menu();
+                                break;
+                            case 'X':
+                                Menu();
+                                break;
+                            default:
+                                break;
+                        }
+                    break;
+
+                    case true:
+
                         break;
                 }
 
             
-        }
+            }
           //SwapKeepWinScore();
 
-
+            Console.WriteLine("Game Over!!!");
+            Console.WriteLine("Press any key to go back to the menu");
+            Console.ReadKey();
+            Menu();
 
         }
        
@@ -174,31 +256,49 @@ namespace MontyHall
 
         public static int FirstDecision(int numOfDoors)
         {
+            int firstDecision;
             while(true)
             {
                 if (numOfDoors < 10)
                 {
                     ConsoleKeyInfo firstDecisionInput = Console.ReadKey(true);
-                   
-                    return int.Parse(firstDecisionInput.KeyChar.ToString()) - 1;
+
+                    if (int.TryParse(firstDecisionInput.KeyChar.ToString(), out  firstDecision ))
+                    {
+                        return firstDecision - 1;
+                    }
                 }
+                   
+                
                     
                 else if (numOfDoors >= 10)
-                    {
-                        string firstDecisionInputStr = "ERROR";
+                {
+                        string? firstDecisionInputStr;
                         firstDecisionInputStr = Console.ReadLine();
-                        return int.Parse(firstDecisionInputStr) - 1;
-                    }
+
+                        if (int.TryParse(firstDecisionInputStr, out  firstDecision ) && firstDecision <= numOfDoors)
+                        {
+
+                        return firstDecision - 1;
+                        }
+                }
 
                 
                 Console.WriteLine("Invalid Input - try again");
 
             }
-
-
-            
         }
 
+        public static int FirstDecisionAuto(int numOfDoors)
+        {
+            
+
+            Random rand = new Random();
+            int firstDecisionAuto = rand.Next(numOfDoors);
+            return firstDecisionAuto;
+
+        }
+    
         public static bool Winning(int winningDoor, int firstDecision)
         {
             //TESTCODE
@@ -259,15 +359,15 @@ namespace MontyHall
                 
             }
 
-             Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
+           /* Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
             foreach (int reveal in firstRevealUpd)
             {
             Console.WriteLine(reveal);
             }
             Console.WriteLine("TEST CODE");
             Console.WriteLine(winningDoor + "\n" + firstDecision);
+            */
 
-            Console.ReadKey();
             
             return firstRevealUpd;
         }
@@ -397,6 +497,7 @@ namespace MontyHall
         
         public static double WinOrLose(bool winning, double score)
         {
+            
             //TEST CODE 
             //Console.WriteLine($"\nBool winning = {winning}\n");
             if (winning == true)
