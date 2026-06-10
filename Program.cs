@@ -109,7 +109,8 @@ namespace MontyHall
                 {
                     NoSwap(doors, winningDoor,  firstDecision,  firstReveal,  winning);
                 }
-             revealInstance = 1;
+
+            revealInstance = 1;
             Classes.output(doors, numOfDoors, revealInstance, firstDecision);
             
             score = WinOrLose(winning, score);
@@ -122,7 +123,6 @@ namespace MontyHall
             
             Console.WriteLine("(1) Play again");
             Console.WriteLine("(x) Back to menu");
-           
             char input = Classes.menuInput();
 
             switch (input)
@@ -240,7 +240,7 @@ namespace MontyHall
             foreach (int reveal in firstRevealUpd)
             {
             
-            Console.WriteLine($"Reveal Values: {reveal}");
+            Console.WriteLine(reveal);
             }
         
 
@@ -252,29 +252,7 @@ namespace MontyHall
             {
                 if (x != winningDoor && x != firstDecision)
                 {
-                    if (winningDoor != firstDecision)
-                    {
-                    firstRevealUpd[x] = x;
-                    }
-                    else if (winningDoor == firstDecision)
-                    {
-                        firstRevealUpd[x] = x;
-
-                        Random rand = new Random();
-                        int random = rand.Next(numOfDoors);
-                        while (random == winningDoor)
-                        {
-                            random = rand.Next(numOfDoors);
-                        }
-                        firstRevealUpd[random] = x;
-                        x = numOfDoors;
-
-                    }
-                
-          
-              
-                    
-
+                firstRevealUpd[x] = x;
                 }
                 
                 
@@ -284,10 +262,10 @@ namespace MontyHall
              Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
             foreach (int reveal in firstRevealUpd)
             {
-                Console.WriteLine($"New reveal values: {reveal}");
+            Console.WriteLine(reveal);
             }
             Console.WriteLine("TEST CODE");
-            Console.WriteLine($"The winning door is {winningDoor + 1}\nYou chose door {firstDecision + 1}");
+            Console.WriteLine(winningDoor + "\n" + firstDecision);
 
             Console.ReadKey();
             
@@ -296,22 +274,32 @@ namespace MontyHall
         
         public static void FirstRevealOutput(string[] doors, int winningDoor, int firstDecision, int firstReveal, int[] firstRevealUpd, int numOfDoors )
         {
-
+           // doors[firstReveal] = $"Door {firstReveal + 1} - Goat - Revealed Door";
+        /*
+            for (int x = 0; x < numOfDoors; x++)
+            {
+                doors[firstRevealUpd[x]]  = "Goat";
+            }
+*/
+           /* foreach (int reveal in firstRevealUpd)
+            {
+                doors[reveal] = "Goat";
+                 
+            }
+            */
             for (int x = 0; x < numOfDoors; x++)
             {
                 if (firstRevealUpd[x] <= numOfDoors)
                 {
                     doors[firstRevealUpd[x]] = $"Door {x + 1} - Goat";
                 }
-               // else if (firstRevealUpd[x] <= num)
                 else
                 {
                     doors[x] = $"Door {x + 1}";
                 }
-                
             }
            // doors[winningDoor] = $"Door "
-             revealInstance = 0;
+            revealInstance = 0;
             Classes.output(doors, numOfDoors, revealInstance, firstDecision);
         }
         

@@ -29,16 +29,21 @@ public class Classes()
                             Console.ForegroundColor = ConsoleColor.Yellow;
                         }
                         
-                        if ( x == firstDecision )
+                        if ( x == firstDecision)
                         {   
                             if (revealInstance == 0)
                             {
                             Console.ForegroundColor = ConsoleColor.Green;
                             }
-                            else if (revealInstance == 1)
+                            else if (revealInstance == 1 && (doors[x].Contains("Goat")) )
                             {             
                              Console.ForegroundColor = ConsoleColor.Red;                 
-                            }             
+                            }      
+                            else if (revealInstance == 1 && (!(doors[x].Contains("Goat"))))
+                            {             
+                             Console.ForegroundColor = ConsoleColor.Yellow;                 
+                            }      
+                               
                         }
                         
                         
