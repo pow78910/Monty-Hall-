@@ -330,19 +330,19 @@ namespace MontyHall
             return firstReveal;
         
         }
-    public static int [] FirstRevealUpd(int winningDoor, int firstDecision, int numOfDoors)
+     public static int [] FirstRevealUpd(int winningDoor, int firstDecision, int numOfDoors)
         {
             int[] firstRevealUpd = new int[numOfDoors];
-            
+
             Console.WriteLine("\n\n\nTEST CODE\n\n\n");
 
-            
+
             foreach (int reveal in firstRevealUpd)
             {
-            
-            Console.WriteLine(reveal);
+
+            Console.WriteLine($"Reveal Values: {reveal}");
             }
-        
+
 
             for (int x = 0; x < numOfDoors; x++)
             {
@@ -353,22 +353,45 @@ namespace MontyHall
                 if (x != winningDoor && x != firstDecision)
                 {
                 firstRevealUpd[x] = x;
+                    if (winningDoor != firstDecision)
+                    {
+                    firstRevealUpd[x] = x;
+                    }
+                    else if (winningDoor == firstDecision)
+                    {
+                        firstRevealUpd[x] = x;
+
+                        Random rand = new Random();
+                        int random = rand.Next(numOfDoors);
+                        while (random == winningDoor)
+                        {
+                            random = rand.Next(numOfDoors);
+                        }
+                        firstRevealUpd[random] = x;
+                        x = numOfDoors;
+
+                    }
+                
+          
+              
+                    
+
                 }
-                
-                
-                
+
+
+
             }
 
-           /* Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
+             Console.WriteLine("\n\n\nTEST CODE 2\n\n\n");
             foreach (int reveal in firstRevealUpd)
             {
-            Console.WriteLine(reveal);
+                Console.WriteLine($"New reveal values: {reveal}");
             }
             Console.WriteLine("TEST CODE");
-            Console.WriteLine(winningDoor + "\n" + firstDecision);
-            */
+            Console.WriteLine($"The winning door is {winningDoor}\nYou chose door {firstDecision}");
 
-            
+            Console.ReadKey();
+
             return firstRevealUpd;
         }
         
